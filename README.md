@@ -44,3 +44,28 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Mindset
+1. I dont prirorites design or making it look good. I focus on making it work and then make it look good.
+2. I dont use time on setting up environments variables for the API. Instead the developer can just change the url in the code.
+3. 
+
+## LøsningsBeskrivelse
+
+1. Lekt med DI Address Helper V2 i postman for å finne ut hvordan den fungerer. 
+2. Ta i bruk axios og material UI for å lage en enkel UI som kan ta imot en adresse og returnere en liste med adresser.
+
+
+
+## Potentiol improvements
+1. Add input delay as a optional
+2. Add a loading spinner
+3. Add a error message if the API call fails
+
+
+
+## Libraries used
+
+1. Material UI: https://material-ui.com/ - for UI components
+2. Axios: https://axios-http.com/ - Promise based HTTP client for the browser and node.js
