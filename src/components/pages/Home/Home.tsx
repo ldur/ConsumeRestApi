@@ -4,6 +4,7 @@ import { AddressForm } from "../../molecules/AddressForm/AddressForm";
 import { ResultContainer } from "../../molecules/ResultContainer/ResultContainer";
 import { IResult } from "../../../models/IResult";
 import { Street } from "../../../models/IStreetCollections";
+import { Typography } from "@mui/material";
 
 
 export const Home = () => {
@@ -18,12 +19,12 @@ export const Home = () => {
 
 	return (
 		<div className="main-container">
-			<h1>DI Address Helper Case</h1>
+			<Typography variant="h4">DI Tech Case</Typography>
 			<div className="content-container">
 				<AddressForm
 					streetSelected={(street: Street) => {
 						setFinalResult({
-								street: null,
+								street: street,
 								streetNumber: null,
 								floor: null,
 								flat: null,

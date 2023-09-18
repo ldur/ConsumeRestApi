@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, Typography } from "@mui/material";
 import {
 	getFloorsForDeliveryPointId,
 	getHouseholdsOnFloor,
@@ -12,6 +12,7 @@ import { IStreetNumbersForCollection, StreetNumber } from "../../../models/IStre
 import { HouseTypesMap } from "../../../util/HouseTypes.mapper";
 import { IFloor } from "../../../models/IFloor";
 import { IHouseholdsOnFloor } from "../../../models/IHouseholdsOnFloor";
+import { getFlatLabel } from "../../../util/string-parser.util";
 
 
 interface AddressFormProps {
@@ -87,132 +88,137 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 		}
 	}
 
-	function parseFloorNumber(floorNo: number | undefined) {
-		if (floorNo) {
-			return floorNo < 10 ? '0' + floorNo : floorNo;
-		}
-		return '';
-	}
+	// function parseFloorNumber(floorNo: number | undefined) {
+	// 	if (floorNo) {
+	// 		return floorNo < 10 ? '0' + floorNo : floorNo;
+	// 	}
+	// 	return '';
+	// }
 
-	function parseFlatNr(flatNo: number) {
-		return flatNo < 10 ? '0' + flatNo : flatNo
-	}
-
-	function getFlatLabel(option: IHouseholdsOnFloor) {
-		return option.flatNoAlias ? option.flatNoAlias : option.flatNo + '. dør fra venstre (' + selectedFloor?.floorType + parseFloorNumber(selectedFloor?.floorNo) + parseFlatNr(option.flatNo) + ')';
-	}
+	// function parseFlatNr(flatNo: number) {
+	// 	return flatNo < 10 ? '0' + flatNo : flatNo
+	// }
+	//
+	// function getFlatLabel(option: IHouseholdsOnFloor) {
+	// 	return option.flatNoAlias ? option.flatNoAlias : option.flatNo + '. dør fra venstre (' + selectedFloor?.floorType + parseFloorNumber(selectedFloor?.floorNo) + parseFlatNr(option.flatNo) + ')';
+	// }
 
 	return (
-		<div className="main-form-container">
-			<Autocomplete
-				disableClearable={true}
-				renderOption={(props, option) => {
-					return (
-						<li {...props} key={option.streetIds.join(',')}>
-							{option.streetName + ' ' + option.city}
-						</li>
-					);
-				}}
-				onChange={(event, value) => {
-					if (value) {
-						setStreetNumberSearchInput('');
-						setSelectedFloor(undefined);
-						setSelectedStreetNumber(undefined);
-						getStreetNumbersForCollection(value.streetIds.join(','))
-							.then(res => {
-								setStreetNumbersForCollection(res.data as IStreetNumbersForCollection);
-							})
-							.catch(error => console.log(error));
-					}
-				}}
-				getOptionLabel={(option) => option.streetName + ', ' + option.city}
-				options={streetCollectionResponse.streets}
-				sx={{width: 300}}
-				renderInput={(params) => <TextField {...params} label="Gate"
-				                                    value={streetNameSearchInput}
-				                                    onChange={event => setStreetNameSearchInput(event.target.value)}
-				/>}
-			/>
+		<div className="main-container">
+			<Typography variant="h4">Søk</Typography>
+			<div className="main-form-container">
 
-			<Autocomplete
-				disabled={!streetCollectionResponse}
-				disableClearable={true}
-				getOptionLabel={(option) => getStreetNr(option)}
-				renderOption={(props, option) => {
-					return (
-						<li {...props} key={option.addressId}>
-							{getStreetNr(option)}
-						</li>
-					);
-				}}
-				onChange={(event, value) => {
-					getFloors(value);
-				}}
-				options={streetNumbersForCollection.streetNumbers}
-				sx={{width: 200}}
-				renderInput={(params) => <TextField {...params} label="Gate nr"
-				                                    onChange={event => setStreetNumberSearchInput(event.target.value)}
-				/>}
-			/>
+				<Autocomplete
+					disableClearable={true}
+					renderOption={(props, option) => {
+						return (
+							<li {...props} key={option.streetIds.join(',')}>
+								{option.streetName + ', ' + option.city}
+							</li>
+						);
+					}}
+					onChange={(event, value) => {
+						if (value) {
+							setSelectedFloor(undefined);
+							setSelectedStreetNumber(undefined);
+							addressFormProps.streetSelected(value);
+							getStreetNumbersForCollection(value.streetIds.join(','))
+								.then(res => {
+									setStreetNumbersForCollection(res.data as IStreetNumbersForCollection);
+								})
+								.catch(error => console.log(error));
+						}
+					}}
+					getOptionLabel={(option) => option.streetName + ', ' + option.city}
+					options={streetCollectionResponse.streets}
+					sx={{width: 300}}
+					renderInput={(params) => <TextField
+						{...params}
+						label="Gate"
+						value={streetNameSearchInput}
+						onChange={event => setStreetNameSearchInput(event.target.value)}
+					/>}
+				/>
 
-			{selectedStreetNumber?.showHouseholds && <Autocomplete
-                disabled={!floorsForDeliveryPointId}
-                disableClearable={true}
-                getOptionLabel={(option) => 'Etasje ' + option.floorNo.toString()}
-                renderOption={(props, option) => {
-					return (
-						<li {...props} key={option.floorNo}>
-							{'Etasje ' + option.floorNo.toString()}
-						</li>
-					);
-				}}
-                onChange={(event, value) => {
-					console.log(value);
-					if (value) {
-						setSelectedFloor(value);
-						addressFormProps.floorSelected(value);
-						getHouseholdsOnFloor(selectedStreetNumber.deliveryPointId.toString(), value.floorType, value.floorNo.toString())
-							.then(res => {
-								setHouseHoldsForFloorResponse(res.data as IHouseholdsOnFloor[]);
-							})
-							.catch(error => console.log(error));
-					}
-				}}
-                options={floorsForDeliveryPointId}
-                sx={{width: 150}}
-                renderInput={(params) => <TextField {...params}
-				                                    disabled={!floorsForDeliveryPointId}
-				                                    label="Etasje"
-				/>}
-            />}
+				<Autocomplete
+					disabled={!streetCollectionResponse}
+					disableClearable={true}
+					getOptionLabel={(option) => getStreetNr(option)}
+					renderOption={(props, option) => {
+						return (
+							<li {...props} key={option.addressId}>
+								{getStreetNr(option)}
+							</li>
+						);
+					}}
+					onChange={(event, value) => {
+						getFloors(value);
+					}}
+					options={streetNumbersForCollection.streetNumbers}
+					sx={{width: 200}}
+					renderInput={(params) => <TextField {...params} label="Gate nr"
+					                                    onChange={event => setStreetNumberSearchInput(event.target.value)}
+					/>}
+				/>
+
+				{selectedStreetNumber?.showHouseholds && <Autocomplete
+                    disabled={!floorsForDeliveryPointId}
+                    disableClearable={true}
+                    getOptionLabel={(option) => 'Etasje ' + option.floorNo.toString()}
+                    renderOption={(props, option) => {
+						return (
+							<li {...props} key={option.floorNo}>
+								{'Etasje ' + option.floorNo.toString()}
+							</li>
+						);
+					}}
+                    onChange={(event, value) => {
+						console.log(value);
+						if (value) {
+							setSelectedFloor(value);
+							addressFormProps.floorSelected(value);
+							getHouseholdsOnFloor(selectedStreetNumber.deliveryPointId.toString(), value.floorType, value.floorNo.toString())
+								.then(res => {
+									setHouseHoldsForFloorResponse(res.data as IHouseholdsOnFloor[]);
+								})
+								.catch(error => console.log(error));
+						}
+					}}
+                    options={floorsForDeliveryPointId}
+                    sx={{width: 150}}
+                    renderInput={(params) => <TextField {...params}
+					                                    disabled={!floorsForDeliveryPointId}
+					                                    label="Etasje"
+					/>}
+                />}
 
 
-			{selectedStreetNumber?.showHouseholds && <Autocomplete
-                disabled={!selectedFloor}
-                disableClearable={true}
-                getOptionLabel={(option) => getFlatLabel(option)}
-                renderOption={(props, option) => {
-					return (
-						<li {...props} key={selectedFloor?.floorType + option.flatNo.toString()}>
-							{getFlatLabel(option)}
-						</li>
-					);
-				}}
-                onChange={(event, value) => {
-					console.log(value);
-					if (value) {
-						addressFormProps.flatSelected(value);
-					}
-				}}
-                options={houseHoldsForFloorResponse}
-                sx={{width: 300}}
-                renderInput={(params) => <TextField {...params}
-				                                    disabled={!selectedFloor}
-				                                    label="Leilighet"
-				/>}
-            />}
+				{selectedStreetNumber?.showHouseholds && <Autocomplete
+                    disabled={!selectedFloor}
+                    disableClearable={true}
+                    getOptionLabel={(option) => getFlatLabel(option, selectedFloor!)}
+                    renderOption={(props, option) => {
+						return (
+							<li {...props} key={selectedFloor?.floorType + option.flatNo.toString()}>
+								{getFlatLabel(option, selectedFloor!)}
+							</li>
+						);
+					}}
+                    onChange={(event, value) => {
+						console.log(value);
+						if (value) {
+							addressFormProps.flatSelected(value);
+						}
+					}}
+                    options={houseHoldsForFloorResponse}
+                    sx={{width: 300}}
+                    renderInput={(params) => <TextField {...params}
+					                                    disabled={!selectedFloor}
+					                                    label="Leilighet"
+					/>}
+                />}
 
+			</div>
 		</div>
-
 	);
 }

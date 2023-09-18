@@ -2,10 +2,20 @@
     flex: 1;
 
     .stats-container {
-        border-color: dodgerblue;
-        border-style: solid;
-        border-width: 2px;
-        border-radius: 15px;
         width: 100%;
+        margin-top: 1rem;
+
+        .border-wrapper {
+            border-color: dodgerblue;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 15px;
+
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            padding: 1rem;
+        }
     }
 }
