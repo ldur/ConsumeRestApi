@@ -1,0 +1,11 @@
+.main-container {
+    flex: 1;
+
+    .stats-container {
+        border-color: dodgerblue;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 15px;
+        width: 100%;
+    }
+}
