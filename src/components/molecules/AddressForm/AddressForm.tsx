@@ -12,7 +12,7 @@ import { IStreetNumbersForCollection, StreetNumber } from "../../../models/IStre
 import { HouseTypesMap } from "../../../util/HouseTypes.mapper";
 import { IFloor } from "../../../models/IFloor";
 import { IHouseholdsOnFloor } from "../../../models/IHouseholdsOnFloor";
-import { getFlatLabel } from "../../../util/string-parser.util";
+import { getFlatLabel } from "../../../util/StringParser.util";
 
 
 interface AddressFormProps {
@@ -24,11 +24,7 @@ interface AddressFormProps {
 
 export const AddressForm = (addressFormProps: AddressFormProps) => {
 	const [streetNameSearchInput, setStreetNameSearchInput] = useState("");
-	const [streetNumberSearchInput, setStreetNumberSearchInput] = useState("");
-	const [floorSearchInput, setFloorSearchInput] = useState("");
-	const [flatSearchInput, setFlatSearchInput] = useState("");
 
-	//TODO rename to response
 	const [streetCollectionResponse, setStreetCollectionResponse] = React.useState<IStreetCollections>({
 		streets: [],
 		totalResults: 0
@@ -41,7 +37,6 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 	const [floorsForDeliveryPointId, setFloorsForDeliveryPointId] = React.useState<IFloor[]>([]);
 
 
-	const [selectedHouseHoldsForFloor, setSelectedHouseHoldsForFloor] = React.useState<IHouseholdsOnFloor>();
 	const [houseHoldsForFloorResponse, setHouseHoldsForFloorResponse] = React.useState<IHouseholdsOnFloor[]>([]);
 
 
@@ -52,11 +47,13 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 
 
 	const onStreetNameChange = () => {
-		getStreetCollections(streetNameSearchInput)
-			.then(res => {
-				setStreetCollectionResponse(res.data as IStreetCollections);
-			})
-			.catch(error => console.log(error));
+		if (streetNameSearchInput.length > 0) {
+			getStreetCollections(streetNameSearchInput)
+				.then(res => {
+					setStreetCollectionResponse(res.data as IStreetCollections);
+				})
+				.catch(error => console.log(error));
+		}
 	}
 
 	const getStreetNr = (street: StreetNumber) => {
@@ -88,27 +85,13 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 		}
 	}
 
-	// function parseFloorNumber(floorNo: number | undefined) {
-	// 	if (floorNo) {
-	// 		return floorNo < 10 ? '0' + floorNo : floorNo;
-	// 	}
-	// 	return '';
-	// }
-
-	// function parseFlatNr(flatNo: number) {
-	// 	return flatNo < 10 ? '0' + flatNo : flatNo
-	// }
-	//
-	// function getFlatLabel(option: IHouseholdsOnFloor) {
-	// 	return option.flatNoAlias ? option.flatNoAlias : option.flatNo + '. dør fra venstre (' + selectedFloor?.floorType + parseFloorNumber(selectedFloor?.floorNo) + parseFlatNr(option.flatNo) + ')';
-	// }
-
 	return (
 		<div className="main-container">
 			<Typography variant="h4">Søk</Typography>
 			<div className="main-form-container">
 
 				<Autocomplete
+					id={'streetNameSearchInput'}
 					disableClearable={true}
 					renderOption={(props, option) => {
 						return (
@@ -134,6 +117,7 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 					sx={{width: 300}}
 					renderInput={(params) => <TextField
 						{...params}
+						inputProps={{"data-testid": "street-name-search-input"}}
 						label="Gate"
 						value={streetNameSearchInput}
 						onChange={event => setStreetNameSearchInput(event.target.value)}
@@ -141,6 +125,7 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 				/>
 
 				<Autocomplete
+					id={'streetNrSearchInput'}
 					disabled={!streetCollectionResponse}
 					disableClearable={true}
 					getOptionLabel={(option) => getStreetNr(option)}
@@ -157,11 +142,12 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 					options={streetNumbersForCollection.streetNumbers}
 					sx={{width: 200}}
 					renderInput={(params) => <TextField {...params} label="Gate nr"
-					                                    onChange={event => setStreetNumberSearchInput(event.target.value)}
+
 					/>}
 				/>
 
 				{selectedStreetNumber?.showHouseholds && <Autocomplete
+                    id={'floorSearchInput'}
                     disabled={!floorsForDeliveryPointId}
                     disableClearable={true}
                     getOptionLabel={(option) => 'Etasje ' + option.floorNo.toString()}
@@ -194,6 +180,7 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 
 
 				{selectedStreetNumber?.showHouseholds && <Autocomplete
+                    id={'flatSearchInput'}
                     disabled={!selectedFloor}
                     disableClearable={true}
                     getOptionLabel={(option) => getFlatLabel(option, selectedFloor!)}
