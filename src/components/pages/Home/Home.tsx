@@ -1,63 +1,66 @@
 import React from 'react';
 import './Home.css';
-import { AddressForm } from "../../molecules/AddressForm/AddressForm";
-import { ResultContainer } from "../../molecules/ResultContainer/ResultContainer";
-import { IResult } from "../../../models/IResult";
-import { Street } from "../../../models/IStreetCollections";
-import { Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
+import { AddressSearchRow } from "../../organisms/AddressSearchRow";
+import { getRandomKey } from "../../../util/KeyGenerator.util";
 
 
 export const Home = () => {
 
-	const [finalResult, setFinalResult] = React.useState<IResult>({
-		street: null,
-		streetNumber: null,
-		floor: null,
-		flat: null,
-		resultDone: false
-	});
+	function getNewAddressSearchRow(id: number = 0) {
+		return (
+			<AddressSearchRow
+				id={id}
+				copyButtonClicked={() => {
+				}}
+				deleteButtonVisible={false}
+				deleteButtonClicked={() => {
+				}}
+			></AddressSearchRow>
+		)
+	}
+
+	const [searchRows, setSearchRows] = React.useState<{ key: string, element: JSX.Element }[]>([{
+		key: getRandomKey(),
+		element: getNewAddressSearchRow()
+	}
+	]);
 
 	return (
 		<div className="main-container">
 			<Typography variant="h4">DI Tech Case</Typography>
-			<div className="content-container">
-				<AddressForm
-					streetSelected={(street: Street) => {
-						setFinalResult({
-								street: street,
-								streetNumber: null,
-								floor: null,
-								flat: null,
-								resultDone: false
+			<div className="column-content">
+				{searchRows.map((searchRow, index) => {
+					return (
+						<div key={searchRow.key}>
+							<searchRow.element.type
+								deleteButtonVisible={searchRows.length > 1}
+								deleteButtonClicked={() => {
+									setSearchRows(searchRows.filter((sr, index) => {
+											return sr.key !== searchRow.key
+										}
+									))
+
+								}}></searchRow.element.type>
+							{searchRows.length > 1 &&
+                                <Divider/>
 							}
-						)
-					}}
-					streetNumberSelected={(streetNumber) => {
-						setFinalResult({
-							...finalResult,
-							streetNumber: streetNumber,
-							resultDone: !streetNumber.showHouseholds
-						})
-					}}
-					floorSelected={(floor) => {
-						setFinalResult({
-							...finalResult,
-							floor: floor,
-							flat: null,
-							resultDone: false
-						})
-					}}
-					flatSelected={(flat) => {
-						setFinalResult({
-							...finalResult,
-							flat: flat,
-							resultDone: true
-						})
-					}}
-				></AddressForm>
-				<ResultContainer
-					result={finalResult}
-				></ResultContainer>
+						</div>
+
+					)
+				})}
+				<div>
+					<Button
+						variant="contained"
+						onClick={() => {
+							setSearchRows([...searchRows, {
+								key: getRandomKey(),
+								element: getNewAddressSearchRow()
+							}
+							])
+						}}
+					>Legg til søk</Button>
+				</div>
 			</div>
 		</div>
 	);

@@ -1,5 +1,12 @@
 # DI Address Helper Tech Case
 
+## Task requirements
+
+1. Implement an addresscheck UI where users can validate their address.
+2. Search the address using the API provided by DI.
+3. Search for multiple addresses.
+4. Show a confirmation in the UI.
+
 ## Mindset
 
 1. I don't prioritize design or making it look good. I focus on making it work and then add test.

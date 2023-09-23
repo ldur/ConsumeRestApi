@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import {
 	getFloorsForDeliveryPointId,
 	getHouseholdsOnFloor,
@@ -68,14 +68,12 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 	};
 
 	function getFloors(streetNumberSelected: StreetNumber) {
-		console.log(streetNumberSelected);
 		if (streetNumberSelected) {
 			setSelectedStreetNumber(streetNumberSelected);
 			addressFormProps.streetNumberSelected(streetNumberSelected);
 			if (streetNumberSelected.showHouseholds) {
 				getFloorsForDeliveryPointId(streetNumberSelected.deliveryPointId.toString())
 					.then(res => {
-						console.log(res.data);
 						setFloorsForDeliveryPointId(res.data);
 					})
 					.catch(error => console.log(error));
@@ -87,7 +85,6 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 
 	return (
 		<div className="main-container">
-			<Typography variant="h4">Søk</Typography>
 			<div className="main-form-container">
 
 				<Autocomplete
@@ -112,12 +109,15 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 								.catch(error => console.log(error));
 						}
 					}}
+					isOptionEqualToValue={(option, value) => {
+						return option.streetIds.join(',') === value.streetIds.join(',');
+					}
+					}
 					getOptionLabel={(option) => option.streetName + ', ' + option.city}
 					options={streetCollectionResponse.streets}
 					sx={{width: 300}}
 					renderInput={(params) => <TextField
 						{...params}
-						inputProps={{"data-testid": "street-name-search-input"}}
 						label="Gate"
 						value={streetNameSearchInput}
 						onChange={event => setStreetNameSearchInput(event.target.value)}
@@ -159,7 +159,6 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 						);
 					}}
                     onChange={(event, value) => {
-						console.log(value);
 						if (value) {
 							setSelectedFloor(value);
 							addressFormProps.floorSelected(value);
@@ -172,9 +171,10 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 					}}
                     options={floorsForDeliveryPointId}
                     sx={{width: 150}}
-                    renderInput={(params) => <TextField {...params}
-					                                    disabled={!floorsForDeliveryPointId}
-					                                    label="Etasje"
+                    renderInput={(params) => <TextField
+						{...params}
+						disabled={!floorsForDeliveryPointId}
+						label="Etasje"
 					/>}
                 />}
 
