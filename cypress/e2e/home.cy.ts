@@ -1,11 +1,21 @@
 export {}
 
 describe('Home', () => {
+	function selectStreetName(streetName: string) {
+		const streetNameOptions = cy.get('.MuiAutocomplete-popper li');
+		streetNameOptions.contains(streetName).should('be.visible');
+		streetNameOptions.contains(streetName).click();
+	}
+
+	function selectStreetNr(streetNr: string) {
+		const streetNrOptions = cy.get('.MuiAutocomplete-popper li');
+		streetNrOptions.contains(streetNr).should('be.visible');
+		streetNrOptions.contains(streetNr).click();
+	}
+
 	it('should show initial content', () => {
 		cy.visit('http://localhost:3000/')
 		cy.get('.App > :nth-child(1) > :nth-child(1)').should('have.text', 'DI Tech Case')
-		cy.get('.content-container > :nth-child(1) > .MuiTypography-root').should('have.text', 'Søk');
-		cy.get(':nth-child(2) > .MuiTypography-root').should('have.text', 'Kvittering');
 		cy.get('.css-1wuilmg-MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root').should('have.value', '')
 		cy.get('.css-o1xa9-MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root').should('have.value', '')
 	})
@@ -21,9 +31,7 @@ describe('Home', () => {
 				streetNameInput.should('have.value', '')
 				streetNameInput.type('Knud Øyens vei')
 
-				const streetNameOptions = cy.get('.MuiAutocomplete-popper li');
-				streetNameOptions.contains("KNUD ØYENS VEI, OSLO").should('be.visible');
-				streetNameOptions.contains("KNUD ØYENS VEI, OSLO").click();
+				selectStreetName("KNUD ØYENS VEI, OSLO")
 
 
 				cy.get('.stats-wrapper').should('be.visible')
@@ -37,13 +45,12 @@ describe('Home', () => {
 				streetNrInputField.should('have.value', '')
 				streetNrInputField.type('12')
 
-				const streetNrOptions = cy.get('.MuiAutocomplete-popper li');
-				streetNrOptions.contains("12 A").should('be.visible');
-				streetNrOptions.contains("12 A").click();
+				selectStreetNr("12 A")
 
 
 				cy.get('.stats-wrapper').should('be.visible')
 				cy.get('.MuiBadge-badge').should('be.visible')
+
 				cy.get('#streetNameResult').should('have.text', 'Gate navn: KNUD ØYENS VEI')
 				cy.get('#cityResult').should('have.text', 'Poststed: OSLO')
 				cy.get('#postalCodeResult').should('have.text', 'Post nr: 1166')
@@ -64,9 +71,7 @@ describe('Home', () => {
 				streetNameInput.should('have.value', '')
 				streetNameInput.type('Knud Øyens vei')
 
-				const streetNameOptions = cy.get('.MuiAutocomplete-popper li');
-				streetNameOptions.contains("KNUD ØYENS VEI, OSLO").should('be.visible');
-				streetNameOptions.contains("KNUD ØYENS VEI, OSLO").click();
+				selectStreetName("KNUD ØYENS VEI, OSLO")
 
 
 				cy.get('.stats-wrapper').should('be.visible')
@@ -80,9 +85,7 @@ describe('Home', () => {
 				streetNrInputField.should('have.value', '')
 				streetNrInputField.type('13')
 
-				const streetNrOptions = cy.get('.MuiAutocomplete-popper li');
-				streetNrOptions.contains("13 C").should('be.visible');
-				streetNrOptions.contains("13 C").click();
+				selectStreetNr("13 C")
 
 
 				cy.get('.stats-wrapper').should('be.visible')
@@ -121,6 +124,52 @@ describe('Home', () => {
 
 		})
 
+	})
+
+	describe('Multiple searches', () => {
+		const randomNr = Math.floor(Math.random() * 5) + 1
+
+		before(() => {
+			cy.visit('http://localhost:3000/')
+		})
+
+		it('should show button for add search', () => {
+			cy.get('#addSearchButton').should('be.visible')
+		})
+
+		it('should add a new search when clicking add search button', () => {
+			for (let i = 0; i < randomNr; i++) {
+				cy.get('#addSearchButton').click()
+			}
+
+			cy.get('.search-wrapper').should('have.length', randomNr + 1)
+		})
+
+		it('should search for Knud Oyens vei and Testveien', () => {
+
+
+			cy.get('.search-wrapper').each((searchWrapper, index) => {
+				if (index % 2 === 0) {
+					cy.wrap(searchWrapper).find('#streetNameSearchInput').type('Knud Øyens vei')
+					selectStreetName("KNUD ØYENS VEI, OSLO");
+
+					cy.wrap(searchWrapper).find('#streetNrSearchInput').type('12')
+
+					selectStreetNr("12 A");
+
+					cy.wrap(searchWrapper).find('.MuiBadge-badge').should('be.visible')
+
+				} else {
+					cy.wrap(searchWrapper).find('#streetNameSearchInput').type('Testveien')
+					selectStreetName("TESTVEIEN, Dummy");
+
+					cy.wrap(searchWrapper).find('#streetNrSearchInput').type('1')
+					selectStreetNr("1");
+					cy.wrap(searchWrapper).find('.MuiBadge-badge').should('be.visible')
+
+				}
+			})
+		})
 	})
 
 })

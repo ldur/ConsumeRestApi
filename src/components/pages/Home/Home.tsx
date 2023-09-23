@@ -32,7 +32,8 @@ export const Home = () => {
 			<div className="column-content">
 				{searchRows.map((searchRow, index) => {
 					return (
-						<div key={searchRow.key}>
+						<div key={searchRow.key}
+						     className={"search-wrapper"}>
 							<searchRow.element.type
 								deleteButtonVisible={searchRows.length > 1}
 								deleteButtonClicked={() => {
@@ -52,6 +53,7 @@ export const Home = () => {
 				<div>
 					<Button
 						variant="contained"
+						id="addSearchButton"
 						onClick={() => {
 							setSearchRows([...searchRows, {
 								key: getRandomKey(),

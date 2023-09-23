@@ -18,9 +18,8 @@
 1. Take advantage of Axios and Material UI to create a simple UI for navigating the available form field and conclude
    with a receipt in case success. Content of the receipt is key information regarding the address.
 2. Added Cypress test for E2E testing.
-3. Added unit thest for the API calls.
 
-## Potentiol improvements
+## Potential improvements
 
 1. Add input delay as an optional
 2. Add a loading spinner
