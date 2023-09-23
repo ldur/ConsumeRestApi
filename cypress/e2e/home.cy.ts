@@ -116,8 +116,8 @@ describe('Home', () => {
 				flatOptions.contains("1. dør fra venstre (H0101)").should('be.visible');
 				flatOptions.contains("1. dør fra venstre (H0101)").click();
 
-				cy.get('#householdResult').should('have.text', '1. dør fra venstre (H0101)')
-				cy.get('#floorResult').should('have.text', 'Etasje 1')
+				cy.get('#householdResult').should('have.text', 'Leilighet: 1. dør fra venstre (H0101)')
+				cy.get('#floorResult').should('have.text', 'Etasje: 1')
 
 				cy.get('.MuiBadge-badge').should('be.visible')
 			});
@@ -146,8 +146,6 @@ describe('Home', () => {
 		})
 
 		it('should search for Knud Oyens vei and Testveien', () => {
-
-
 			cy.get('.search-wrapper').each((searchWrapper, index) => {
 				if (index % 2 === 0) {
 					cy.wrap(searchWrapper).find('#streetNameSearchInput').type('Knud Øyens vei')
@@ -172,4 +170,24 @@ describe('Home', () => {
 		})
 	})
 
+	describe('Removed search', () => {
+		before(() => {
+			cy.visit('http://localhost:3000/')
+		})
+
+		it('should show button for add search', () => {
+			cy.get('#addSearchButton').should('be.visible')
+		})
+
+		it('should add a new search when clicking add search button', () => {
+			cy.get('#addSearchButton').click()
+			cy.get('.search-wrapper').should('have.length', 2)
+		})
+
+		it('should remvoe the first when clicking remove button', () => {
+			cy.get('.search-wrapper').first().find('#removeSearchButton').click()
+			cy.get('.search-wrapper').should('have.length', 1)
+		});
+
+	})
 })

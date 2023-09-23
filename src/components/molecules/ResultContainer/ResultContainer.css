@@ -16,13 +16,5 @@
             align-items: flex-start;
             padding: 1rem;
         }
-
-        .stats-wrapper__success {
-            border-color: green;
-        }
-
-        .unfinished {
-            border-color: orange;
-        }
     }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import './Home.css';
 import { Button, Divider, Typography } from "@mui/material";
-import { AddressSearchRow } from "../../organisms/AddressSearchRow";
 import { getRandomKey } from "../../../util/KeyGenerator.util";
+import { AddressSearchRow } from "../../organisms/AddressSearchRow/AddressSearchRow";
 
 
 export const Home = () => {

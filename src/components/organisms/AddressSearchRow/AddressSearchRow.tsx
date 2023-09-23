@@ -1,11 +1,12 @@
 import React from 'react';
-import { AddressForm } from "../molecules/AddressForm/AddressForm";
-import { Street } from "../../models/IStreetCollections";
-import { ResultContainer } from "../molecules/ResultContainer/ResultContainer";
 import { Button } from "@mui/material";
-import { IResult } from "../../models/IResult";
+
 import './AddressSearchRow.css';
 import ClearIcon from '@mui/icons-material/Clear';
+import { Street } from "../../../models/IStreetCollections";
+import { AddressForm } from '../../molecules/AddressForm/AddressForm';
+import { ResultContainer } from "../../molecules/ResultContainer/ResultContainer";
+import { IResult } from "../../../models/IResult";
 
 interface AddressSearchRowProps {
 	copyButtonClicked: () => void;
@@ -63,6 +64,7 @@ export const AddressSearchRow = (addressSearchRowProps: AddressSearchRowProps) =
 			<div>
 				{addressSearchRowProps.deleteButtonVisible && <Button variant="contained"
                                                                       color="error"
+                                                                      id="removeSearchButton"
                                                                       onClick={() => {
 					                                                      addressSearchRowProps.deleteButtonClicked();
 				                                                      }}

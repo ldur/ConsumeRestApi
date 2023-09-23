@@ -83,12 +83,38 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 		}
 	}
 
+	function streetNameChanged(value: Street) {
+		if (value) {
+			setSelectedFloor(undefined);
+			setSelectedStreetNumber(undefined);
+			addressFormProps.streetSelected(value);
+			getStreetNumbersForCollection(value.streetIds.join(','))
+				.then(res => {
+					setStreetNumbersForCollection(res.data as IStreetNumbersForCollection);
+				})
+				.catch(error => console.log(error));
+		}
+	}
+
+	function floorChanged(value: IFloor) {
+		if (value) {
+			setSelectedFloor(value);
+			addressFormProps.floorSelected(value);
+			getHouseholdsOnFloor(selectedStreetNumber!.deliveryPointId.toString(), value.floorType, value.floorNo.toString())
+				.then(res => {
+					setHouseHoldsForFloorResponse(res.data as IHouseholdsOnFloor[]);
+				})
+				.catch(error => console.log(error));
+		}
+	}
+
 	return (
 		<div className="main-container">
 			<div className="main-form-container">
 
 				<Autocomplete
 					id={'streetNameSearchInput'}
+					data-testid={"streetNameSearchInput"}
 					disableClearable={true}
 					renderOption={(props, option) => {
 						return (
@@ -98,16 +124,7 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 						);
 					}}
 					onChange={(event, value) => {
-						if (value) {
-							setSelectedFloor(undefined);
-							setSelectedStreetNumber(undefined);
-							addressFormProps.streetSelected(value);
-							getStreetNumbersForCollection(value.streetIds.join(','))
-								.then(res => {
-									setStreetNumbersForCollection(res.data as IStreetNumbersForCollection);
-								})
-								.catch(error => console.log(error));
-						}
+						streetNameChanged(value);
 					}}
 					isOptionEqualToValue={(option, value) => {
 						return option.streetIds.join(',') === value.streetIds.join(',');
@@ -159,15 +176,7 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 						);
 					}}
                     onChange={(event, value) => {
-						if (value) {
-							setSelectedFloor(value);
-							addressFormProps.floorSelected(value);
-							getHouseholdsOnFloor(selectedStreetNumber.deliveryPointId.toString(), value.floorType, value.floorNo.toString())
-								.then(res => {
-									setHouseHoldsForFloorResponse(res.data as IHouseholdsOnFloor[]);
-								})
-								.catch(error => console.log(error));
-						}
+						floorChanged(value);
 					}}
                     options={floorsForDeliveryPointId}
                     sx={{width: 150}}
@@ -192,7 +201,6 @@ export const AddressForm = (addressFormProps: AddressFormProps) => {
 						);
 					}}
                     onChange={(event, value) => {
-						console.log(value);
 						if (value) {
 							addressFormProps.flatSelected(value);
 						}

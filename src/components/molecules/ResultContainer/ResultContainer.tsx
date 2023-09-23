@@ -4,6 +4,7 @@ import { Badge, Typography } from "@mui/material";
 import { IResult } from "../../../models/IResult";
 import CheckIcon from '@mui/icons-material/Check';
 import { getFlatLabel } from "../../../util/StringParser.util";
+import { HouseTypesMap } from "../../../util/HouseTypes.mapper";
 
 interface ResultContainerProps {
 	result: IResult;
@@ -42,16 +43,22 @@ export const ResultContainer = (resultContainerProps: ResultContainerProps) => {
 									{resultContainerProps.result.streetNumber?.entrance &&
                                         <Typography id={"entranceResult"}><strong>Inngang:</strong> {resultContainerProps.result.streetNumber?.entrance}
                                         </Typography>}
+
+                                    <Typography><strong>Boligtype:</strong> {HouseTypesMap[resultContainerProps.result.streetNumber.houseType]}
+                                    </Typography>
                                 </>
 
 							}
 
-
 							{resultContainerProps.result.floor &&
                                 <>
-                                    <Typography id={"floorResult"}>Etasje {resultContainerProps.result.floor.floorNo}</Typography>
+                                    <Typography id={"floorResult"}><strong>Etasje:</strong> {resultContainerProps.result.floor.floorNo}
+                                    </Typography>
 									{resultContainerProps.result.flat &&
-                                        <Typography id={"householdResult"}>{getFlatLabel(resultContainerProps.result.flat, resultContainerProps.result.floor!)}</Typography>}
+                                        <Typography id={"householdResult"}>
+                                            <strong>Leilighet: </strong>
+											{getFlatLabel(resultContainerProps.result.flat, resultContainerProps.result.floor!)}
+                                        </Typography>}
                                 </>
 							}
 
