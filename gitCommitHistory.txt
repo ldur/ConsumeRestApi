@@ -1,0 +1,54 @@
+commit 38938d72fb1a31cf7d16a48c0eacce8b5f714e27
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Sun Sep 24 20:14:16 2023 +0200
+
+    removed env file
+
+commit 74bcc554a339fd037fa7ba2e8a7ba7602657e216
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Sat Sep 23 12:33:14 2023 +0200
+
+    refactor: extracted method
+    doc: Updated README
+
+commit e3b90dd2622761884b58d886d4de281448ae7b9f
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Sat Sep 23 12:22:59 2023 +0200
+
+    test: added e2e test for multiple searches
+
+commit d8f8c4cb2c9a8ba43044f8d0eb60e55b22b50a63
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Sat Sep 23 11:49:35 2023 +0200
+
+    feat: added multiple search
+
+commit d89b5cc910a3b8d633ebe78712cd7a533ceba46a
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Fri Sep 22 17:53:11 2023 +0200
+
+    test: added cypress e2e tests
+
+commit efcd539aedee4db823bd3453df0e738254b1795c
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Mon Sep 18 17:30:49 2023 +0200
+
+    Feat: Show receipt for search
+
+commit 9369f39137e2015b0d2ec17c24315c10df965524
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Mon Sep 18 14:03:31 2023 +0200
+
+    Feat: Fetches floors and flats for house type
+
+commit 63efb215a038613483d1604f29d4a36b5376ed07
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Sat Sep 16 17:51:00 2023 +0200
+
+    Feat: Created initial components for fetching street name and numbers
+
+commit 660cbfa256d0efeedf69e41c36e10bc8d75569e2
+Author: sikfar <sikander.farooq93@gmail.com>
+Date:   Fri Sep 15 17:24:05 2023 +0200
+
+    Initialize project using Create React App

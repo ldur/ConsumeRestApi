@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = '';
+const apiKey = '905679e0-2da7-4be1-94a2-23646d8d3488';
 
 export const getStreetCollections = async (searchInput: string) => {
 	return axios
